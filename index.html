@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Barbería premium. Cortes clásicos, degradados y afeitado tradicional. Reserva tu cita online.">
+  <title>Barbería El Corte Clásico</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --text: #f5f5f5;
+      --text-muted: #a0a0a0;
+      --accent: #d4af37;
+      --accent-hover: #b8962e;
+      --accent-cabello: #3498db;
+      --accent-barba: #e74c3c;
+      --accent-tinte: #9b59b6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { max-width: 100%; display: block; }
+
+    /* HEADER */
+    header {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(15,15,15,0.95); backdrop-filter: blur(10px);
+      padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000; border-bottom: 1px solid #222;
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--accent); cursor: pointer; }
+    nav ul { display: flex; gap: 2rem; }
+    nav a { font-weight: 600; transition: color 0.3s; cursor: pointer; }
+    nav a:hover, nav a.active { color: var(--accent); }
+    .btn-reserva {
+      background: var(--accent); color: #000; padding: 0.6rem 1.2rem;
+      border-radius: 4px; font-weight: 700; transition: 0.3s; border: none; cursor: pointer;
+    }
+    .btn-reserva:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .btn-reserva.outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .btn-reserva.outline:hover { background: var(--accent); color: #000; }
+    .btn-reserva.cabello { background: var(--accent-cabello); }
+    .btn-reserva.cabello:hover { filter: brightness(1.1); }
+    .btn-reserva.barba { background: var(--accent-barba); }
+    .btn-reserva.barba:hover { filter: brightness(1.1); }
+    .btn-reserva.tinte { background: var(--accent-tinte); }
+    .btn-reserva.tinte:hover { filter: brightness(1.1); }
+    .menu-toggle { display: none; font-size: 1.8rem; cursor: pointer; }
+
+    /* VISTAS (SPA) */
+    .view { display: none; animation: fadeIn 0.4s ease; }
+    .view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1585747860715-2c2d9a42d7a9?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+      text-align: center; padding: 6rem 1rem 4rem;
+    }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem; }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* PAGE HERO */
+    .page-hero {
+      margin-top: 70px; padding: 4rem 5%;
+      background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1920&q=80') center/cover;
+      text-align: center;
+    }
+    .page-hero.cabello { background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=1920&q=80'); }
+    .page-hero.barba { background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1605735789162-1a52d3f64e40?auto=format&fit=crop&w=1920&q=80'); }
+    .page-hero.tinte { background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1920&q=80'); }
+    .page-hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 0.5rem; }
+    .page-hero p { color: var(--text-muted); font-size: 1.1rem; }
+    
+    .btn-volver { 
+      display: inline-flex; align-items: center; gap: 0.5rem; 
+      margin-top: 1rem; color: var(--accent); cursor: pointer; font-weight: 600;
+    }
+    .btn-volver:hover { text-decoration: underline; }
+
+    /* SECCIONES */
+    section { padding: 5rem 5%; }
+    .section-title { text-align: center; margin-bottom: 3rem; }
+    .section-title h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--accent); }
+    .section-title p { color: var(--text-muted); margin-top: 0.5rem; }
+
+    /* CATEGORÍAS PRINCIPALES (en vista servicios) */
+    .categorias-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .categoria-card {
+      background: var(--surface); border-radius: 12px; overflow: hidden;
+      border: 1px solid #222; transition: 0.3s; cursor: pointer; text-align: center;
+    }
+    .categoria-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+    .categoria-card img { width: 100%; height: 220px; object-fit: cover; }
+    .categoria-card .content { padding: 1.5rem; }
+    .categoria-card h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .categoria-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem; }
+    .categoria-card .btn-ver { 
+      display: inline-block; padding: 0.5rem 1.2rem; border-radius: 4px; 
+      font-weight: 600; font-size: 0.9rem; transition: 0.3s;
+    }
+    .categoria-card.cabello .btn-ver { background: var(--accent-cabello); color: #000; }
+    .categoria-card.barba .btn-ver { background: var(--accent-barba); color: #fff; }
+    .categoria-card.tinte .btn-ver { background: var(--accent-tinte); color: #fff; }
+
+    /* CATEGORÍAS DENTRO DE ESTILOS DE CABELLO */
+    .categoria-cabello { margin-bottom: 4rem; }
+    .categoria-cabello .cat-header {
+      text-align: center; margin-bottom: 2rem; padding-bottom: 1rem;
+      border-bottom: 2px solid var(--accent-cabello);
+    }
+    .categoria-cabello .cat-header h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--accent-cabello);
+    }
+    .categoria-cabello .cat-header p { color: var(--text-muted); margin-top: 0.5rem; }
+
+    /* CATEGORÍAS DENTRO DE ESTILOS DE BARBA */
+    .categoria-barba { margin-bottom: 4rem; }
+    .categoria-barba .cat-header {
+      text-align: center; margin-bottom: 2rem; padding-bottom: 1rem;
+      border-bottom: 2px solid var(--accent-barba);
+    }
+    .categoria-barba .cat-header h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--accent-barba);
+    }
+    .categoria-barba .cat-header p { color: var(--text-muted); margin-top: 0.5rem; }
+
+    /* CATEGORÍAS DENTRO DE ESTILOS DE TEÑIDO */
+    .categoria-tinte { margin-bottom: 4rem; }
+    .categoria-tinte .cat-header {
+      text-align: center; margin-bottom: 2rem; padding-bottom: 1rem;
+      border-bottom: 2px solid var(--accent-tinte);
+    }
+    .categoria-tinte .cat-header h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--accent-tinte);
+    }
+    .categoria-tinte .cat-header p { color: var(--text-muted); margin-top: 0.5rem; }
+
+    /* SERVICIOS Y ESTILOS */
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    .service-card { 
+      background: var(--surface); padding: 2rem; border-radius: 8px; 
+      text-align: center; border: 1px solid #222; transition: 0.3s; 
+    }
+    .service-card:hover { transform: translateY(-5px); border-color: var(--accent-cabello); }
+    .service-card.barba-card:hover { border-color: var(--accent-barba); }
+    .service-card.tinte-card:hover { border-color: var(--accent-tinte); }
+    .service-card h3 { margin: 1rem 0 0.5rem; font-size: 1.2rem; }
+    .service-card .badge { 
+      display: inline-block; background: var(--accent-cabello); color: #000; 
+      padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.75rem; 
+      font-weight: 700; margin-bottom: 0.5rem; 
+    }
+    .service-card .badge.barba { background: var(--accent-barba); color: #fff; }
+    .service-card .badge.tinte { background: var(--accent-tinte); color: #fff; }
+    .price { font-size: 1.8rem; color: var(--accent); font-weight: 700; margin: 0.5rem 0; }
+    
+    /* IMÁGENES CON FALLBACK */
+    .service-card img, .gallery-item img, .categoria-card img, .about img { 
+      width: 100%; height: 200px; object-fit: cover; border-radius: 6px; margin-bottom: 1rem; 
+      cursor: zoom-in; transition: transform 0.2s;
+      background: linear-gradient(135deg, var(--surface), #2a2a2a);
+      display: block;
+    }
+    .service-card img:hover, .gallery-item img:hover { transform: scale(1.02); }
+    
+    /* Placeholder cuando la imagen no carga */
+    .service-card img.image-error, 
+    .gallery-item img.image-error,
+    .categoria-card img.image-error,
+    .about img.image-error {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      display: flex; align-items: center; justify-content: center;
+      color: #000; font-weight: 700; font-size: 0.8rem; text-align: center;
+      padding: 1rem;
+    }
+    .service-card img.image-error::after {
+      content: "✂️ " attr(alt);
+    }
+    
+    .service-card .desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; min-height: 60px; }
+
+    /* MODAL/LIGHTBOX PARA IMÁGENES */
+    .modal {
+      display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+      width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+      justify-content: center; align-items: center; animation: fadeIn 0.3s;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      max-width: 90%; max-height: 90%; border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      animation: zoomIn 0.3s;
+      background: var(--surface);
+    }
+    .modal-content.image-error {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text); font-size: 1.2rem; text-align: center; padding: 2rem;
+    }
+    .modal-close {
+      position: absolute; top: 20px; right: 30px;
+      color: #fff; font-size: 3rem; cursor: pointer;
+      transition: color 0.3s; line-height: 1;
+    }
+    .modal-close:hover { color: var(--accent); }
+    .modal-caption {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      color: #fff; font-size: 1rem; text-align: center;
+      background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 4px;
+      max-width: 80%;
+    }
+    @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    /* SOBRE NOSOTROS */
+    .about { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .about img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .about ul { margin-top: 1rem; }
+    .about li { margin-bottom: 0.5rem; }
+    .about li::before { content: "✂️ "; }
+
+    /* GALERÍA */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .gallery-item { height: 250px; overflow: hidden; border-radius: 6px; cursor: pointer; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .gallery-item:hover img { transform: scale(1.1); }
+
+    /* CONTACTO */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .contact-info p { margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .contact-form { background: var(--surface); padding: 2rem; border-radius: 8px; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); }
+    .form-group input, .form-group textarea { width: 100%; padding: 0.8rem; background: #222; border: 1px solid #333; color: var(--text); border-radius: 4px; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+    .btn-submit { background: var(--accent); color: #000; border: none; padding: 0.9rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.3s; }
+    .btn-submit:hover { background: var(--accent-hover); }
+
+    /* CTA FINAL */
+    .cta-final {
+      text-align: center; padding: 4rem 5%; background: var(--surface);
+      border-top: 1px solid #222; border-bottom: 1px solid #222;
+    }
+    .cta-final h3 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .cta-final p { color: var(--text-muted); margin-bottom: 2rem; }
+
+    /* FOOTER */
+    footer { background: #0a0a0a; padding: 3rem 5%; text-align: center; border-top: 1px solid #222; }
+    .socials { margin-bottom: 1rem; }
+    .socials a { margin: 0 0.5rem; font-size: 1.3rem; transition: 0.3s; cursor: pointer; }
+    .socials a:hover { color: var(--accent); }
+    .copyright { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      nav ul { position: fixed; top: 70px; left: -100%; width: 100%; background: var(--surface); flex-direction: column; align-items: center; padding: 2rem; transition: 0.4s; }
+      nav ul.active { left: 0; }
+      .hero h1, .page-hero h1 { font-size: 2.2rem; }
+      .about, .contact-grid, .categorias-grid, .services-grid { grid-template-columns: 1fr; }
+      .categoria-cabello .cat-header h3, .categoria-barba .cat-header h3, .categoria-tinte .cat-header h3 { font-size: 1.5rem; }
+      .modal-content { max-width: 95%; max-height: 80%; }
+      .modal-close { font-size: 2.5rem; top: 15px; right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo" onclick="cambiarVista('inicio')">✂️ El Corte Clásico</div>
+    <div class="menu-toggle" id="menuToggle">☰</div>
+    <nav>
+      <ul id="navMenu">
+        <li><a onclick="cambiarVista('inicio')" id="nav-inicio" class="active">Inicio</a></li>
+        <li><a onclick="cambiarVista('servicios')" id="nav-servicios">Servicios</a></li>
+        <li><a onclick="scrollToSection('nosotros')">Nosotros</a></li>
+        <li><a onclick="scrollToSection('galeria')">Galería</a></li>
+        <li><a onclick="scrollToSection('contacto')">Contacto</a></li>
+        <li><a href="https://wa.me/1234567890?text=Hola,%20quiero%20reservar%20una%20cita" class="btn-reserva" target="_blank">Reservar</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ===== VISTA: INICIO ===== -->
+  <div id="view-inicio" class="view active">
+    
+    <section class="hero" id="inicio">
+      <div>
+        <h1>Estilo, precisión y tradición</h1>
+        <p>Más que un corte, una experiencia. Barbería artesanal con atención personalizada.</p>
+        <div class="hero-buttons">
+          <a href="https://wa.me/1234567890?text=Hola,%20quiero%20reservar%20una%20cita" class="btn-reserva" target="_blank">📅 Agendar Cita</a>
+          <button class="btn-reserva outline" onclick="cambiarVista('servicios')">Ver Servicios</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="nosotros" style="background: var(--surface);">
+      <div class="about">
+        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=800&q=80" alt="Barbero trabajando" onerror="handleImageError(this)">
+        <div>
+          <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--accent); margin-bottom: 1rem;">Sobre Nosotros</h2>
+          <p>Con más de 10 años de experiencia, combinamos técnicas tradicionales con tendencias actuales. Nuestro equipo está certificado y apasionado por el detalle.</p>
+          <ul>
+            <li>Herramientas desinfectadas y de uso personal</li>
+            <li>Productos premium para cabello y barba</li>
+            <li>Ambiente relajado y música en vivo los viernes</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria">
+      <div class="section-title">
+        <h2>Galería</h2>
+        <p>Nuestros trabajos hablan por sí solos</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=600&q=80" alt="Corte 1" onerror="handleImageError(this)"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=600&q=80" alt="Corte 2" onerror="handleImageError(this)"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1593702295094-aea4565928e0?auto=format&fit=crop&w=600&q=80" alt="Barba" onerror="handleImageError(this)"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=600&q=80" alt="Estilo" onerror="handleImageError(this)"></div>
+      </div>
+    </section>
+
+    <section id="contacto" style="background: var(--surface);">
+      <div class="section-title">
+        <h2>Reserva o Contáctanos</h2>
+        <p>Estamos listos para atenderte</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <p>📍 Av. Principal #123, Ciudad</p>
+          <p>📞 +1 234 567 890</p>
+          <p>⏰ Lun-Sáb: 9:00 - 20:00 | Dom: Cerrado</p>
+          <p>✉️ contacto@elcorteclasico.com</p>
+          <a href="https://maps.google.com" target="_blank" style="display: inline-block; margin-top: 1rem; color: var(--accent); border-bottom: 1px solid var(--accent);">📍 Ver en Google Maps</a>
+        </div>
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('¡Mensaje enviado! Te contactaremos pronto.');">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" required placeholder="Tu nombre">
+          </div>
+          <div class="form-group">
+            <label>Teléfono / WhatsApp</label>
+            <input type="tel" required placeholder="+52 ...">
+          </div>
+          <div class="form-group">
+            <label>Mensaje o servicio deseado</label>
+            <textarea rows="4" placeholder="Ej: Quiero degradado + barba el viernes..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Enviar Solicitud</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== VISTA: SERVICIOS PRINCIPALES ===== -->
+  <div id="view-servicios" class="view">
+    
+    <div class="page-hero">
+      <h1>Nuestros Servicios</h1>
+      <p>Calidad premium, atención personalizada y estilo a tu medida</p>
+      <div class="btn-volver" onclick="cambiarVista('inicio')">← Volver al inicio</div>
+    </div>
+
+    <!-- SERVICIOS CON PRECIOS -->
+    <section id="servicios-lista">
+      <div class="section-title">
+        <h2>Servicios & Precios</h2>
+        <p>Todo lo que necesitas para lucir impecable</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <img src="corte clasico.png" alt="Corte Clásico" onerror="handleImageError(this)">
+          <h3>✂️ Corte Clásico</h3>
+          <p class="price">$15</p>
+          <p>Tijera y máquina, acabado natural con asesoramiento de estilo.</p>
+          <button class="btn-reserva" onclick="reservar('Corte Clásico')" style="margin-top:1rem; width:100%;">Reservar</button>
+        </div>
+        <div class="service-card">
+          <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=400&q=80" alt="Degradado Fade" onerror="handleImageError(this)">
+          <h3>🎯 Degradado (Fade)</h3>
+          <p class="price">$18</p>
+          <p>Transición perfecta de largo a corto. Estilo moderno y limpio.</p>
+          <button class="btn-reserva" onclick="reservar('Degradado Fade')" style="margin-top:1rem; width:100%;">Reservar</button>
+        </div>
+        <div class="service-card">
+          <img src="barba + afeitado.png" alt="Barba y Afeitado" onerror="handleImageError(this)">
+          <h3>🧔 Barba + Afeitado</h3>
+          <p class="price">$12</p>
+          <p>Perfilado preciso, toalla caliente, navaja y aceites premium.</p>
+          <button class="btn-reserva" onclick="reservar('Barba + Afeitado')" style="margin-top:1rem; width:100%;">Reservar</button>
+        </div>
+        <div class="service-card">
+          <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80" alt="Pack Completo" onerror="handleImageError(this)">
+          <h3>🎁 Pack Completo</h3>
+          <p class="price">$28</p>
+          <p>Corte + barba + lavado + estilizado + bebida de cortesía.</p>
+          <button class="btn-reserva" onclick="reservar('Pack Completo')" style="margin-top:1rem; width:100%;">Reservar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORÍAS DE ESTILOS (con transición a páginas individuales) -->
+    <section id="estilos-categorias" style="background: var(--surface);">
+      <div class="section-title">
+        <h2>Elige tu Estilo</h2>
+        <p>Explora nuestras categorías especializadas</p>
+      </div>
+      <div class="categorias-grid">
+        
+        <!-- Categoría: Cortes de Cabello -->
+        <div class="categoria-card cabello" onclick="cambiarVista('estilos-cabello')">
+          <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=600&q=80" alt="Cortes de Cabello" onerror="handleImageError(this)">
+          <div class="content">
+            <h3>💇‍♂️ Cortes de Cabello</h3>
+            <p>Fade, Pompadour, Crew Cut, Undercut y más estilos modernos.</p>
+            <span class="btn-ver">Ver Estilos →</span>
+          </div>
+        </div>
+        
+        <!-- Categoría: Cortes de Barba -->
+        <div class="categoria-card barba" onclick="cambiarVista('estilos-barba')">
+          <img src="corte de barba.jpg" alt="Cortes de Barba" onerror="handleImageError(this)">
+          <div class="content">
+            <h3>🧔 Cortes de Barba</h3>
+            <p>Perfilado, candado, stubble y mantenimiento profesional.</p>
+            <span class="btn-ver">Ver Estilos →</span>
+          </div>
+        </div>
+        
+        <!-- Categoría: Teñido de Cabello -->
+        <div class="categoria-card tinte" onclick="cambiarVista('estilos-tinte')">
+          <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80" alt="Teñido de Cabello" onerror="handleImageError(this)">
+          <div class="content">
+            <h3>🎨 Teñido de Cabello</h3>
+            <p>Decolorado, mechas, balayage y retoques de color.</p>
+            <span class="btn-ver">Ver Estilos →</span>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <div class="cta-final">
+      <h3>¿Listo para tu mejor look?</h3>
+      <p>Reserva tu cita en menos de 1 minuto vía WhatsApp</p>
+      <a href="https://wa.me/1234567890?text=Hola,%20quiero%20reservar%20una%20cita" class="btn-reserva" target="_blank">📅 Agendar Ahora</a>
+    </div>
+  </div>
+
+  <!-- ===== VISTA: ESTILOS DE CABELLO (ACTUALIZADA) ===== -->
+  <div id="view-estilos-cabello" class="view">
+    <div class="page-hero cabello">
+      <h1>💇‍️ Cortes de Cabello</h1>
+      <p>Descubre todos los estilos que ofrecemos, desde clásicos hasta tendencias urbanas</p>
+      <div class="btn-volver" onclick="cambiarVista('servicios')">← Volver a Servicios</div>
+    </div>
+    
+    <section>
+      
+      <!-- 1. LOS DEGRADADOS (FADES) -->
+      <div class="categoria-cabello">
+        <div class="cat-header">
+          <h3>1️⃣ Los Degradados (Fades)</h3>
+          <p>No son cortes en sí mismos, sino la técnica que se usa en los laterales y la nuca. Se combinan con casi cualquier estilo de la parte superior.</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card">
+            <span class="badge">Low Fade</span>
+            <img src="Low Fade (Degradado Bajo).png" alt="Low Fade" onerror="handleImageError(this)">
+            <h3>📍 Degradado Bajo</h3>
+            <p class="desc">El desvanecido empieza muy abajo, justo por encima de la oreja y la nuca. Es el más sutil y elegante.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Low Fade')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Mid Fade</span>
+            <img src="Mid Fade (Degradado Medio).png" alt="Mid Fade" onerror="handleImageError(this)">
+            <h3>📍 Degradado Medio</h3>
+            <p class="desc">El corte empieza a desvanecerse a la altura de la sien o mitad de la cabeza. Es el más equilibrado y popular.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Mid Fade')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">High Fade</span>
+            <img src="High Fade (Degradado Alto).png" alt="High Fade" onerror="handleImageError(this)">
+            <h3>📍 Degradado Alto</h3>
+            <p class="desc">El desvanecido empieza muy arriba, cerca de la corona de la cabeza, dejando mucha piel a la vista. Look rudo y llamativo.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - High Fade')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Skin Fade</span>
+            <img src="Skin Fade o Bald Fade.png" alt="Skin Fade" onerror="handleImageError(this)">
+            <h3>📍 Skin / Bald Fade</h3>
+            <p class="desc">El degradado empieza literalmente desde el número cero (rasurado a piel) y va subiendo. Máximo contraste.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Skin Fade')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Taper Fade</span>
+            <img src="Taper Fade.png" alt="Taper Fade" onerror="handleImageError(this)">
+            <h3>📍 Taper Fade</h3>
+            <p class="desc">Solo se degradan las patillas y la línea de la nuca, dejando el resto de los laterales con longitud uniforme. Muy limpio.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Taper Fade')" style="width:100%;">Elegir</button>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- 2. ESTILOS MODERNOS Y URBANOS -->
+      <div class="categoria-cabello">
+        <div class="cat-header">
+          <h3>2️⃣ Estilos Modernos y Urbanos</h3>
+          <p>Los que más se ven hoy en las calles, muy populares en la cultura urbana y el trap/reggaeton.</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card">
+            <span class="badge">Buzz Cut</span>
+            <img src="Buzz Cut.png" alt="Buzz Cut" onerror="handleImageError(this)">
+            <h3>⚡ Buzz Cut</h3>
+            <p class="desc">El corte militar clásico, rapado uniformemente a un solo número. No requiere peinado. Se combina con Mid o High Fade.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Buzz Cut')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Crop Top</span>
+            <img src="Crop Top (o french crop).png" alt="Crop Top" onerror="handleImageError(this)">
+            <h3>🎯 Crop / French Crop</h3>
+            <p class="desc">Flequillo recto y corto en la frente, parte superior texturizada con capas para volumen. Laterales con fade alto.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Crop Top')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Caesar</span>
+            <img src="Caesar Cut (Corte César).png" alt="Caesar Cut" onerror="handleImageError(this)">
+            <h3>👑 Caesar Cut</h3>
+            <p class="desc">Similar al Crop Top, pero el flequillo es mucho más corto y uniforme en toda la cabeza. Inspirado en emperadores romanos.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Caesar')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Mullet</span>
+            <img src="Mullet.png" alt="Mullet" onerror="handleImageError(this)">
+            <h3>🔥 Mullet Moderno</h3>
+            <p class="desc">Corto en laterales, corto arriba adelante, pero largo en la nuca. Ha vuelto con fuerza con un toque moderno y texturizado.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Mullet')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Burst Fade</span>
+            <img src="Burst Fade  Mohawk (Cresta).png" alt="Burst Fade" onerror="handleImageError(this)">
+            <h3>💥 Burst Fade / Mohawk</h3>
+            <p class="desc">El degradado se hace de forma circular alrededor de la oreja, dejando una franja de cabello largo en el centro desde frente a nuca.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Burst Fade')" style="width:100%;">Elegir</button>
+          </div>
+
+           <div class="service-card">
+            <span class="badge">Two Block</span>
+            <img src="Two Block.png" alt="Two Block" onerror="handleImageError(this)">
+            <h3>📐 Two Block</h3>
+            <p class="desc">De los lados a la patilla vas a pedir un número tres... la parte de arriba que te llegue el flequillo entre el ojo y la ceja.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Two Block')" style="width:100%;">Elegir</button>
+          </div>
+          
+          
+        </div>
+      </div>
+
+      <!-- 3. ESTILOS CLÁSICOS Y ELEGANTES -->
+      <div class="categoria-cabello">
+        <div class="cat-header">
+          <h3>3️⃣ Estilos Clásicos y Elegantes</h3>
+          <p>Cortes atemporales que nunca pasan de moda y funcionan excelente para un look más maduro u oficial.</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card">
+            <span class="badge">Pompadour</span>
+            <img src="Pompadour.png" alt="Pompadour" onerror="handleImageError(this)">
+            <h3>🎩 Pompadour</h3>
+            <p class="desc">El clásico tupé con mucho volumen hacia arriba y atrás (estilo Elvis). Puede ser clásico (tijera) o moderno (fade en laterales).</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Pompadour')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Quiff</span>
+            <img src="Quiff.png" alt="Quiff" onerror="handleImageError(this)">
+            <h3>✨ Quiff</h3>
+            <p class="desc">Muy parecido al Pompadour, pero el cabello se peina hacia adelante y luego se eleva solo en la zona del flequillo. Más informal.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Quiff')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Side Part</span>
+            <img src="Side Part (Raya a un lado).png" alt="Side Part" onerror="handleImageError(this)">
+            <h3>👔 Side Part</h3>
+            <p class="desc">El clásico peinado de oficina. El cabello se divide con una línea clara a un costado (a veces marcada con navaja) y se peina hacia el otro.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Side Part')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Slicked Back</span>
+            <img src="Slicked Back.png" alt="Slicked Back" onerror="handleImageError(this)">
+            <h3>💎 Slicked Back</h3>
+            <p class="desc">Todo el cabello de la parte superior se peina directamente hacia atrás, usualmente usando pomada para un efecto húmedo o brillante.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Slicked Back')" style="width:100%;">Elegir</button>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- 4. ESTILOS PARA CABELLO LARGO O RIZADO -->
+      <div class="categoria-cabello">
+        <div class="cat-header">
+          <h3>4️⃣ Estilos para Cabello Largo o Rizado</h3>
+          <p>Cortes diseñados para aprovechar la textura natural del cabello.</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card">
+            <span class="badge">Undercut</span>
+            <img src="Undercut.png" alt="Undercut" onerror="handleImageError(this)">
+            <h3>🔗 Undercut</h3>
+            <p class="desc">Desconecta completamente la parte superior de los laterales. Lados muy cortos y arriba cabello largo, ideal para Man Bun o dejarlo caer.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Undercut')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Curly Fade</span>
+            <img src="Curly Fade.png" alt="Curly Fade" onerror="handleImageError(this)">
+            <h3>🌀 Curly Fade</h3>
+            <p class="desc">Diseñado para cabello rizado. Se mantiene el volumen y los rizos definidos arriba, mientras los laterales se limpian con un degradado.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Curly Fade')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card">
+            <span class="badge">Afro Drop</span>
+            <img src="Afro Drop Fade.png" alt="Afro Drop Fade" onerror="handleImageError(this)">
+            <h3>🌟 Afro Drop Fade</h3>
+            <p class="desc">Especial para cabello afro. Se le da una forma geométrica o redondeada en la parte superior y se combina con un degradado que cae detrás de la oreja.</p>
+            <button class="btn-reserva cabello" onclick="reservar('Corte - Afro Drop Fade')" style="width:100%;">Elegir</button>
+          </div>
+          
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- ===== VISTA: ESTILOS DE BARBA (ACTUALIZADA) ===== -->
+  <div id="view-estilos-barba" class="view">
+    <div class="page-hero barba">
+      <h1>🧔 Cortes de Barba</h1>
+      <p>Descubre todos los estilos de barba que ofrecemos, desde looks cortos y profesionales hasta estilos largos y robustos</p>
+      <div class="btn-volver" onclick="cambiarVista('servicios')">← Volver a Servicios</div>
+    </div>
+    
+    <section>
+      
+      <!-- 1. ESTILOS CORTOS Y DE "TRES DÍAS" -->
+      <div class="categoria-barba">
+        <div class="cat-header">
+          <h3>1️⃣ Estilos Cortos y de "Tres Días"</h3>
+          <p>Ideales si buscas un look masculino pero muy limpio, profesional y de bajo mantenimiento.</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Stubble</span>
+            <img src="Barba de 3 días (Stubble).png" alt="Barba de 3 días" onerror="handleImageError(this)">
+            <h3>📍 Barba de 3 Días (Stubble)</h3>
+            <p class="desc">Es el estilo más corto. Se deja crecer el vello entre 1 y 3 milímetros. El secreto para que se vea bien es definir perfectamente la línea del cuello y los pómulos con navaja.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Stubble 3 días')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Corta Profesional</span>
+            <img src="Barba Corta Profesional.png" alt="Barba Corta Profesional" onerror="handleImageError(this)">
+            <h3>📍 Barba Corta Profesional</h3>
+            <p class="desc">Un vello de entre 5 y 10 milímetros, recortado de forma uniforme. Cubre toda la zona de la barba pero se mantiene muy pegada a la mandíbula. Balance perfecto entre seriedad y estilo.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Corta Profesional')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Beard Fade</span>
+            <img src="Beard Fade (barba con degradado).png" alt="Beard Fade" onerror="handleImageError(this)">
+            <h3>📍 Beard Fade</h3>
+            <p class="desc">¡La tendencia número uno hoy en día! La patilla empieza totalmente rasurada (conectando con el degradado del cabello) y el volumen de la barba va aumentando progresivamente a medida que baja hacia la mandíbula.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Beard Fade')" style="width:100%;">Elegir</button>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- 2. ESTILOS MEDIOS Y DE DISEÑO -->
+      <div class="categoria-barba">
+        <div class="cat-header">
+          <h3>2️⃣ Estilos Medios y de Diseño</h3>
+          <p>Cortes que juegan con las líneas del rostro para resaltar las facciones o disimular imperfecciones.</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Goatee</span>
+            <img src="Candado  Perilla Clásica (Goatee).png" alt="Candado/Goatee" onerror="handleImageError(this)">
+            <h3>🔒 Candado / Perilla Clásica (Goatee)</h3>
+            <p class="desc">Se rasuran por completo las mejillas y los laterales, dejando vello únicamente alrededor de la boca (conectando el bigote con la barbilla). Excelente para alargar rostros redondos.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Goatee')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Van Dyke</span>
+            <img src="Van Dyke.png" alt="Van Dyke" onerror="handleImageError(this)">
+            <h3>🎨 Van Dyke</h3>
+            <p class="desc">Inspirada en el pintor Anthony van Dyck. Es un bigote puntiagudo y una perilla en la barbilla, pero desconectados entre sí (no se tocan). El resto de la cara va totalmente rasurado.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Van Dyke')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Balbo</span>
+            <img src="Balbo.png" alt="Balbo" onerror="handleImageError(this)">
+            <h3>⚡ Balbo</h3>
+            <p class="desc">Una variación muy popular (el estilo que suele usar Robert Downey Jr. como Iron Man). Consiste en un bigote flotante (desconectado) y una barba en la barbilla que se extiende un poco hacia los lados por la mandíbula, pero sin llegar a las patillas.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Balbo')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Hollywoodense</span>
+            <img src="Corte Hollywoodense.png" alt="Corte Hollywoodense" onerror="handleImageError(this)">
+            <h3>🎬 Corte Hollywoodense</h3>
+            <p class="desc">Una barba completa que cubre la mandíbula y la barbilla, pero que se baja drásticamente en la zona de las mejillas, eliminando las patillas altas.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Hollywoodense')" style="width:100%;">Elegir</button>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- 3. ESTILOS LARGOS Y ROBUSTOS -->
+      <div class="categoria-barba">
+        <div class="cat-header">
+          <h3>3️⃣ Estilos Largos y Robustos</h3>
+          <p>Para los que tienen una genética bendecida con vello grueso y tupado. Requieren más cuidado (aceites, bálsamos y cepillado).</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Garibaldi</span>
+            <img src="Barba Completa Clásica (Garibaldi).png" alt="Barba Garibaldi" onerror="handleImageError(this)">
+            <h3>🔴 Barba Completa Clásica (Garibaldi)</h3>
+            <p class="desc">Una barba ancha y tupida que se deja crecer bastante (hasta unos 10-15 cm). La característica principal es que la base (la parte de abajo) se recorta de forma redondeada.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Garibaldi')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Corporativa</span>
+            <img src="Barba Corporativa  Cuadrada.png" alt="Barba Corporativa" onerror="handleImageError(this)">
+            <h3>💼 Barba Corporativa / Cuadrada</h3>
+            <p class="desc">Parecida a la Garibaldi, pero se perfila con la recortadora para darle ángulos muy rectos y una base completamente plana o cuadrada. Ideal para hacer que una mandíbula se vea mucho más imponente.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Corporativa')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card barba-card">
+            <span class="badge barba">Bandholz</span>
+            <img src="Estilo Bandholz  Leñador.png" alt="Bandholz" onerror="handleImageError(this)">
+            <h3>🌲 Estilo Bandholz / Leñador</h3>
+            <p class="desc">Barba al extremo. Se deja crecer libremente durante meses (o años) tanto la barba como el bigote, interviniendo muy poco con la tijera, solo para quitar puntas abiertas.</p>
+            <button class="btn-reserva barba" onclick="reservar('Barba - Bandholz')" style="width:100%;">Elegir</button>
+          </div>
+          
+          
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- ===== VISTA: ESTILOS DE TEÑIDO (ACTUALIZADA) ===== -->
+  <div id="view-estilos-tinte" class="view">
+    <div class="page-hero tinte">
+      <h1>🎨 Teñido de Cabello</h1>
+      <p>Transforma tu look con nuestros servicios de coloración profesional, desde tonos naturales hasta colores vibrantes</p>
+      <div class="btn-volver" onclick="cambiarVista('servicios')">← Volver a Servicios</div>
+    </div>
+    
+    <section>
+      
+      <!-- 1. COLORES GLOBALES (TODO EL CABELLO) -->
+      <div class="categoria-tinte">
+        <div class="cat-header">
+          <h3>1️⃣ Colores Globales (Todo el cabello)</h3>
+          <p>Consiste en aplicar un solo tono uniforme en toda la parte superior del cabello (usualmente dejando los laterales oscuros o con degradado para generar contraste).</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">Platinado</span>
+            <img src="Platinado  Blanco Absoluto.png" alt="Platinado" onerror="handleImageError(this)">
+            <h3>✨ Platinado / Blanco Absoluto</h3>
+            <p class="desc">El rey de los colores urbanos. Requiere una decoloración muy alta (llevar el cabello a una base casi blanca) y aplicar un matizante. Da un aspecto frío, futurista y muy llamativo.</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - Platinado')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">Gris Plata</span>
+            <img src="Gris Plata  Cenizo (Silver Hair).png" alt="Gris Plata" onerror="handleImageError(this)">
+            <h3>🔘 Gris Plata / Cenizo</h3>
+            <p class="desc">Una variante del platinado pero con tonos más oscuros y metalizados. Es excelente porque se ve muy estético y disimula muy bien el crecimiento de la raíz.</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - Gris Plata')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">Rubio Nórdico</span>
+            <img src="Rubio Nórdico  Dorado.png" alt="Rubio Nórdico" onerror="handleImageError(this)">
+            <h3>☀️ Rubio Nórdico / Dorado</h3>
+            <p class="desc">Desde el rubio extra claro hasta tonos más cálidos. Es un clásico que aporta mucha luz al rostro y da un aire veraniego o surfero.</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - Rubio Nórdico')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">Fantasía</span>
+            <img src="Colores Fantasía.png" alt="Colores Fantasía" onerror="handleImageError(this)">
+            <h3>🌈 Colores Fantasía</h3>
+            <p class="desc">Tonos vibrantes que no existen de forma natural. Los más populares: azul rey, rosa neón, verde turquesa y morado. Muy usado por artistas urbanos y deportistas.</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - Color Fantasía')" style="width:100%;">Elegir</button>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- 2. EFECTOS DE LUZ Y TEXTURA (TÉCNICAS PARCIALES) -->
+      <div class="categoria-tinte">
+        <div class="cat-header">
+          <h3>2️⃣ Efectos de Luz y Textura</h3>
+          <p>No cambian el color de toda la cabeza, sino que juegan con mechones o zonas específicas para dar volumen, movimiento y profundidad al corte.</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">Highlights</span>
+            <img src="Reflejos  Rayitos (Highlights).png" alt="Reflejos" onerror="handleImageError(this)">
+            <h3>✨ Reflejos / Rayitos</h3>
+            <p class="desc">Se seleccionan pequeños mechones delgados en la parte superior y se aclaran un par de tonos más arriba de tu color natural. Hace que los cortes texturizados resalten el doble.</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - Reflejos')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">Frosted Tips</span>
+            <img src="Puntas Aclaradas (Frosted Tips).png" alt="Puntas Aclaradas" onerror="handleImageError(this)">
+            <h3>❄️ Puntas Aclaradas</h3>
+            <p class="desc">Se decoloran únicamente las puntas del cabello (un par de centímetros), manteniendo la raíz intacta con tu color natural. Muy popular en cabellos rizados o con textura.</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - Puntas Aclaradas')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">High Contrast</span>
+            <img src="High Contrast (Contraste Alto).png" alt="Alto Contraste" onerror="handleImageError(this)">
+            <h3>⚡ High Contrast</h3>
+            <p class="desc">Dejar la parte superior completamente teñida de un color muy claro (como rubio o platinado) y los laterales (el Fade) totalmente oscuros con tu color natural. Cambio drástico e imponente.</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - High Contrast')" style="width:100%;">Elegir</button>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- 3. ESTILOS DE DISEÑO Y URBANOS (AVANZADOS) -->
+      <div class="categoria-tinte">
+        <div class="cat-header">
+          <h3>3️⃣ Estilos de Diseño y Urbanos</h3>
+          <p>Arte puro sobre la cabeza. Requieren un barbero o colorista experto y se realizan casi siempre sobre cortes muy cortos como el Buzz Cut.</p>
+        </div>
+        <div class="services-grid">
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">Hair Stencil</span>
+            <img src="Diseños con Plantilla (Hair Stencil).png" alt="Diseños con Plantilla" onerror="handleImageError(this)">
+            <h3>🎨 Diseños con Plantilla</h3>
+            <p class="desc">Sobre un rapado uniforme, se usan plantillas y tintes semipermanentes para dibujar formas: manchas de leopardo, fuego, estrellas, caritas felices o patrones geométricos.</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - Hair Stencil')" style="width:100%;">Elegir</button>
+          </div>
+          
+          <div class="service-card tinte-card">
+            <span class="badge tinte">Split Dye</span>
+            <img src="Teñido Bicolor (Split Dye).png" alt="Teñido Bicolor" onerror="handleImageError(this)">
+            <h3>🔀 Teñido Bicolor (Split Dye)</h3>
+            <p class="desc">Dividir el cabello de la parte superior exactamente a la mitad y pintar cada lado de un color diferente. Puede ser blanco y negro, azul y rosa, etc. ¡Máximo impacto visual!</p>
+            <button class="btn-reserva tinte" onclick="reservar('Tinte - Split Dye')" style="width:100%;">Elegir</button>
+          </div>
+          
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- FOOTER (común) -->
+  <footer>
+    <div class="socials">
+      <a href="#">📘 Facebook</a>
+      <a href="#">📸 Instagram</a>
+      <a href="#">🎵 TikTok</a>
+    </div>
+    <p class="copyright">© 2026 Barbería El Corte Clásico. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- ===== MODAL/LIGHTBOX PARA IMÁGENES ===== -->
+  <div id="imageModal" class="modal">
+    <span class="modal-close" onclick="cerrarModal()">&times;</span>
+    <img class="modal-content" id="modalImg">
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
+
+  <script>
+    // ===== NAVEGACIÓN SPA =====
+    function cambiarVista(vista) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${vista}`).classList.add('active');
+      
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      if(['inicio','servicios'].includes(vista)) {
+        const navItem = document.getElementById(`nav-${vista}`);
+        if(navItem) navItem.classList.add('active');
+      }
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      const navMenu = document.getElementById('navMenu');
+      if(navMenu) navMenu.classList.remove('active');
+      
+      const hash = vista === 'inicio' ? '#' : `#${vista}`;
+      history.pushState(null, null, hash);
+    }
+
+    function scrollToSection(id) {
+      cambiarVista('inicio');
+      setTimeout(() => {
+        const section = document.getElementById(id);
+        if(section) section.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+
+    window.addEventListener('load', () => {
+      const hash = window.location.hash.replace('#', '');
+      const vistasValidas = ['inicio','servicios','estilos-cabello','estilos-barba','estilos-tinte'];
+      if(vistasValidas.includes(hash)) {
+        cambiarVista(hash);
+      }
+    });
+
+    window.addEventListener('popstate', () => {
+      const hash = window.location.hash.replace('#', '') || 'inicio';
+      const vistasValidas = ['inicio','servicios','estilos-cabello','estilos-barba','estilos-tinte'];
+      if(vistasValidas.includes(hash)) {
+        cambiarVista(hash);
+      } else {
+        cambiarVista('inicio');
+      }
+    });
+
+    // ===== MENÚ MÓVIL =====
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+    if(menuToggle) {
+      menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
+      document.querySelectorAll('#navMenu a').forEach(link => {
+        link.addEventListener('click', () => navMenu.classList.remove('active'));
+      });
+    }
+
+    // ===== FUNCIÓN RESERVAR =====
+    function reservar(servicio) {
+      const telefono = "1234567890"; // ← CAMBIA POR TU NÚMERO CON CÓDIGO DE PAÍS
+      const mensaje = `Hola, quiero reservar una cita para: ${servicio}. ¿Qué horarios tienen disponibles?`;
+      const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank');
+    }
+
+    // ===== SCROLL SUAVE PARA ANCLAS INTERNAS =====
+    document.querySelectorAll('a[href^="#"]:not([onclick])').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if(target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // ===== MANEJO DE ERRORES EN IMÁGENES =====
+    function handleImageError(img) {
+      // Agregar clase para estilo de error
+      img.classList.add('image-error');
+      // Remover el src para evitar reintentos infinitos
+      img.removeAttribute('src');
+      // Asegurar que el alt se muestre
+      img.alt = img.alt || 'Imagen no disponible';
+    }
+
+    // ===== LIGHTBOX/MODAL PARA IMÁGENES =====
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImg');
+    const modalCaption = document.getElementById('modalCaption');
+
+    // Abrir modal al hacer clic en cualquier imagen
+    document.querySelectorAll('.service-card img, .gallery-item img, .categoria-card img, .about img').forEach(img => {
+      img.addEventListener('click', function() {
+        // Si la imagen tiene error, no abrir modal
+        if(this.classList.contains('image-error')) {
+          alert('Esta imagen no está disponible en tu dispositivo. Verifica que el archivo esté en la carpeta correcta.');
+          return;
+        }
+        
+        modal.classList.add('active');
+        modalImg.src = this.src;
+        modalImg.classList.remove('image-error'); // Resetear clase de error
+        modalCaption.textContent = this.alt || '';
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    // Cerrar modal
+    function cerrarModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Cerrar modal al hacer clic fuera de la imagen
+    modal.addEventListener('click', function(e) {
+      if(e.target === modal) cerrarModal();
+    });
+
+    // Cerrar modal con tecla Escape
+    document.addEventListener('keydown', function(e) {
+      if(e.key === 'Escape' && modal.classList.contains('active')) {
+        cerrarModal();
+      }
+    });
+
+    // ===== PRECARGA DE IMÁGENES LOCALES (opcional para mejor experiencia) =====
+    // Esto ayuda a detectar errores de carga tempranamente
+    window.addEventListener('load', function() {
+      document.querySelectorAll('img[src*=".png"], img[src*=".jpg"]').forEach(img => {
+        // Solo para imágenes locales (sin http/https)
+        if(!img.src.startsWith('http')) {
+          const testImg = new Image();
+          testImg.onload = function() {
+            // Imagen cargada correctamente
+          };
+          testImg.onerror = function() {
+            // Si falla, aplicar manejo de error
+            if(img.parentNode) handleImageError(img);
+          };
+          testImg.src = img.src;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
