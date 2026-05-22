@@ -994,14 +994,37 @@
       });
     });
 
-    // ===== MANEJO DE ERRORES EN IMÁGENES =====
+    // ===== MANEJO INTELIGENTE DE ERRORES EN IMÁGENES =====
     function handleImageError(img) {
-      // Agregar clase para estilo de error
-      img.classList.add('image-error');
-      // Remover el src para evitar reintentos infinitos
-      img.removeAttribute('src');
-      // Asegurar que el alt se muestre
-      img.alt = img.alt || 'Imagen no disponible';
+      // Si ya intentamos el fallback, mostrar placeholder definitivo
+      if (img.dataset.fallbackTried) {
+        img.classList.add('image-error');
+        img.removeAttribute('src');
+        return;
+      }
+      
+      // Mapeo de imágenes problemáticas a fallbacks de Unsplash
+      const fallbackMap = {
+        'Crop Top': 'https://images.unsplash.com/photo-1595429638954-1a5c9d7e6e8e?auto=format&fit=crop&w=400&q=80',
+        'Barba Corta Profesional': 'https://images.unsplash.com/photo-1595429638954-1a5c9d7e6e8e?auto=format&fit=crop&w=400&q=80',
+        'Beard Fade': 'https://images.unsplash.com/photo-1605735789162-1a52d3f64e40?auto=format&fit=crop&w=400&q=80',
+        'Van Dyke': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80',
+        // Fallback genérico para cualquier otra imagen que falle
+        'default': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80'
+      };
+      
+      const alt = img.alt;
+      let fallbackUrl = fallbackMap[alt] || fallbackMap['default'];
+      
+      // Intentar cargar el fallback
+      img.dataset.fallbackTried = 'true';
+      img.src = fallbackUrl;
+      
+      // Si el fallback también falla, mostrar placeholder
+      img.onerror = function() {
+        img.classList.add('image-error');
+        img.removeAttribute('src');
+      };
     }
 
     // ===== LIGHTBOX/MODAL PARA IMÁGENES =====
@@ -1020,7 +1043,7 @@
         
         modal.classList.add('active');
         modalImg.src = this.src;
-        modalImg.classList.remove('image-error'); // Resetear clase de error
+        modalImg.classList.remove('image-error');
         modalCaption.textContent = this.alt || '';
         document.body.style.overflow = 'hidden';
       });
@@ -1044,18 +1067,13 @@
       }
     });
 
-    // ===== PRECARGA DE IMÁGENES LOCALES (opcional para mejor experiencia) =====
-    // Esto ayuda a detectar errores de carga tempranamente
+    // ===== PRECARGA DE IMÁGENES LOCALES =====
     window.addEventListener('load', function() {
       document.querySelectorAll('img[src*=".png"], img[src*=".jpg"]').forEach(img => {
-        // Solo para imágenes locales (sin http/https)
         if(!img.src.startsWith('http')) {
           const testImg = new Image();
-          testImg.onload = function() {
-            // Imagen cargada correctamente
-          };
+          testImg.onload = function() { /* OK */ };
           testImg.onerror = function() {
-            // Si falla, aplicar manejo de error
             if(img.parentNode) handleImageError(img);
           };
           testImg.src = img.src;
