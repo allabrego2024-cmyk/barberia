@@ -533,9 +533,10 @@
             <button class="btn-reserva cabello" onclick="reservar('Corte - Buzz Cut')" style="width:100%;">Elegir</button>
           </div>
           
+          <!-- ✅ CORREGIDO: Crop Top con URL de Unsplash -->
           <div class="service-card">
             <span class="badge">Crop Top</span>
-            <img src="Crop Top (o french crop).png" alt="Crop Top">
+            <img src="https://images.unsplash.com/photo-1595429638954-1a5c9d7e6e8e?auto=format&fit=crop&w=400&q=80" alt="Crop Top">
             <h3>🎯 Crop / French Crop</h3>
             <p class="desc">Flequillo recto y corto en la frente, parte superior texturizada con capas para volumen. Laterales con fade alto.</p>
             <button class="btn-reserva cabello" onclick="reservar('Corte - Crop Top')" style="width:100%;">Elegir</button>
@@ -692,9 +693,10 @@
             <button class="btn-reserva barba" onclick="reservar('Barba - Corta Profesional')" style="width:100%;">Elegir</button>
           </div>
           
+          <!-- ✅ CORREGIDO: Beard Fade con URL de Unsplash -->
           <div class="service-card barba-card">
             <span class="badge barba">Beard Fade</span>
-            <img src="Beard Fade (barba con degradado).png" alt="Beard Fade">
+            <img src="https://images.unsplash.com/photo-1605735789162-1a52d3f64e40?auto=format&fit=crop&w=400&q=80" alt="Beard Fade">
             <h3>📍 Beard Fade</h3>
             <p class="desc">¡La tendencia número uno hoy en día! La patilla empieza totalmente rasurada (conectando con el degradado del cabello) y el volumen de la barba va aumentando progresivamente a medida que baja hacia la mandíbula.</p>
             <button class="btn-reserva barba" onclick="reservar('Barba - Beard Fade')" style="width:100%;">Elegir</button>
@@ -994,13 +996,10 @@
       });
     });
 
-    // ===== MANEJO DE ERRORES EN IMÁGENES - VERSIÓN SIMPLIFICADA =====
-    // Solo muestra placeholder si la imagen no carga, sin alertas molestas
+    // ===== MANEJO DE ERRORES EN IMÁGENES =====
     document.querySelectorAll('img[src*=".png"], img[src*=".jpg"]').forEach(img => {
-      // Solo para imágenes locales (que no son de Unsplash)
       if(!img.src.startsWith('http')) {
         img.addEventListener('error', function() {
-          // Solo mostrar placeholder, sin intentar fallbacks complejos
           this.classList.add('image-error');
           this.removeAttribute('src');
         });
@@ -1012,13 +1011,9 @@
     const modalImg = document.getElementById('modalImg');
     const modalCaption = document.getElementById('modalCaption');
 
-    // Abrir modal al hacer clic en cualquier imagen
     document.querySelectorAll('.service-card img, .gallery-item img, .categoria-card img, .about img').forEach(img => {
       img.addEventListener('click', function() {
-        // Si la imagen tiene error, no abrir modal
-        if(this.classList.contains('image-error')) {
-          return; // Simplemente no hacer nada, sin alertas molestas
-        }
+        if(this.classList.contains('image-error')) return;
         
         modal.classList.add('active');
         modalImg.src = this.src;
@@ -1028,18 +1023,15 @@
       });
     });
 
-    // Cerrar modal
     function cerrarModal() {
       modal.classList.remove('active');
       document.body.style.overflow = '';
     }
 
-    // Cerrar modal al hacer clic fuera de la imagen
     modal.addEventListener('click', function(e) {
       if(e.target === modal) cerrarModal();
     });
 
-    // Cerrar modal con tecla Escape
     document.addEventListener('keydown', function(e) {
       if(e.key === 'Escape' && modal.classList.contains('active')) {
         cerrarModal();
